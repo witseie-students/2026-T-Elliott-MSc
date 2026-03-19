@@ -22,7 +22,6 @@
 6. [Datasets](#datasets)
 7. [Environment Variables (.env)](#environment-variables-env)
 8. [Conda Environment](#conda-environment)
-9. [Testing](#testing)
 
 ---
 ## Project Overview
@@ -174,15 +173,6 @@ Regenerate with:
 conda env export --no-builds > environment.yml
 ```
 
----
-## Testing
-```bash
-# Python tests
-pytest
-
-# Frontend unit tests
-npm test
-```
 
 
 

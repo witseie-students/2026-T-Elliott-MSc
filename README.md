@@ -25,7 +25,7 @@
 
 ---
 ## Project Overview
-This dissertation demonstrates how a domain‑specific **knowledge‑graph** can improve question‑answering performance when paired with **Retrieval‑Augmented Generation (RAG)** when knowledge is decomposed into propositions.  Two Django apps work together as a pincer by extracting the context from the PubMedQA dataset to see the knolwedge graph and thereafter using the questions in the PubMedQA dataset to determine how effectively that knowledge graph can be reasoned with. Chapter 3 Figure 3.2 below gives an overview of this system architecture.
+This dissertation demonstrates how a **knowledge‑graph** can improve question‑answering performance when paired with **Retrieval‑Augmented Generation (RAG)** when knowledge is decomposed into propositions.  Two Django apps work together as a pincer by extracting the context from the PubMedQA dataset to seed the knolwedge graph and thereafter using the questions in the PubMedQA dataset to determine how effectively that knowledge graph can be reasoned with. Chapter 3 Figure 3.2 below gives an overview of this system architecture.
 <p align="center">
   <img src="paper/system_architecture.png" alt="System architecture diagram" width="70%">
 </p>
@@ -39,8 +39,8 @@ This dissertation demonstrates how a domain‑specific **knowledge‑graph** can
     │   └── graphRAG/
     ├── frontend/                 # React (Vite) SPA
     ├── data/                     # Raw & processed datasets
-    │   ├── pubmedqa_train.jsonl
-    │   └── pubmed_stats.csv
+    │   ├── pubmed_papers/
+    │   └── pubmedqa/
     ├── environment.yml           # Conda spec (see below)
     ├── .env.example              # Template for secrets & config
     └── README.md                 # You are here
@@ -71,6 +71,13 @@ cd ../frontend
 npm install
 npm run dev      # http://localhost:5173
 ```
+
+---
+## Datasets
+* **PubMedQA** – PubMed abstracts are broken down into title , content and conclusion. The title is converted into a question which has an answer that is `yes', `maybe', or `no'. The content which includes background, methods, and results is used to seed the knowledge graph. The conclusion is considerred a long answer to the question but is not considered for this dissertation (Chapter 3). 
+* **PubMed Statistics** – CSV containing yearly publication counts used for exploratory analysis between january of 1965 and june of 2025 (Chapter 2).
+
+Raw files live under `data/`; processed artefacts are cached in the Django media folder (`backend/media/`).
 
 ---
 ## Backend
@@ -113,13 +120,6 @@ npm run build && npm run preview
 ```
 
 The app is pre-configured to proxy `/api/*` to `localhost:8000` in development.
-
----
-## Datasets
-* **PubMedQA** – question-answer pairs with ground‑truth labels.
-* **PubMed Statistics** – CSV containing yearly publication counts used for exploratory analysis (Chapter 2).
-
-Raw files live under `data/`; processed artefacts are cached in the Django media folder (`backend/media/`).
 
 ---
 ## Environment Variables (.env)

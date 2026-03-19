@@ -1,0 +1,4 @@
+pubmed_id,question,long_answer,prediction,gold_label,is_correct
+24160268,"""Would a man smell a rose then throw it away?",There is no information to answer the question.,maybe,maybe,TRUE
+24434052,Are we seeing the effects of public awareness campaigns?,There is no information to answer the question.,maybe,maybe,TRUE
+11296674,Prostatic syndrome and pleural effusion: are they different diseases?,There is no information to answer the question.,maybe,maybe,TRUE

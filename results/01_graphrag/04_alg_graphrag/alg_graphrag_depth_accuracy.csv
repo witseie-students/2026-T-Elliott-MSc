@@ -1,0 +1,8 @@
+depth,n_rows,accuracy,file
+1,344,56.69,alg_graphrag_d1_qa_outcome.csv
+2,344,55.81,alg_graphrag_d2_qa_outcome.csv
+3,344,54.94,alg_graphrag_d3_qa_outcome.csv
+4,344,53.2,alg_graphrag_d4_qa_outcome.csv
+5,344,56.1,alg_graphrag_d5_qa_outcome.csv
+6,344,55.52,alg_graphrag_d6_qa_outcome.csv
+7,344,57.85,alg_graphrag_d7_qa_outcome.csv

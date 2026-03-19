@@ -23,8 +23,6 @@
 7. [Environment Variables (.env)](#environment-variables-env)
 8. [Conda Environment](#conda-environment)
 9. [Testing](#testing)
-10. [Contributing](#contributing)
-11. [License](#license)
 
 ---
 ## Project Overview

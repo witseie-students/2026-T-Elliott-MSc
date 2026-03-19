@@ -75,9 +75,8 @@ npm run dev      # http://localhost:5173
 ---
 ## Datasets
 * **PubMedQA** – PubMed abstracts are broken down into title , content and conclusion. The title is converted into a question which has an answer that is *yes*, *maybe*, or *no*. The content which includes background, methods, and results is used to seed the knowledge graph. The conclusion is considerred a long answer to the question but is not considered for this dissertation (Chapter 3). 
-* **PubMed Statistics** – CSV containing yearly publication counts used for exploratory analysis between january of 1965 and june of 2025 (Chapter 2).
+* **PubMed Statistics** – CSV containing yearly publication counts used for exploratory analysis between January of 1965 and June of 2025 (Chapter 2).
 
-Raw files live under `data/`; processed artefacts are cached in the Django media folder (`backend/media/`).
 
 ---
 ## Backend

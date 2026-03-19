@@ -228,7 +228,7 @@ psutil
 ptyprocess
 pure_eval
 pyarrow==17.0.0
-pyasn1==0.6.1
+pyasn1==0.6.3
 pyasn1_modules==0.4.1
 pycparser
 pydantic==2.10.6

@@ -26,6 +26,7 @@
 ---
 ## Project Overview
 This dissertation demonstrates how a domain‑specific **knowledge‑graph** can improve question‑answering performance when paired with **Retrieval‑Augmented Generation (RAG)**.  Two Django apps map directly to the experimental chapters:
+![System architecture diagram](paper/system_architecture.png)
 
 | Chapter | Django App | Purpose |
 |---------|------------|---------|

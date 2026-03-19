@@ -25,15 +25,10 @@
 
 ---
 ## Project Overview
-This dissertation demonstrates how a domain‑specific **knowledge‑graph** can improve question‑answering performance when paired with **Retrieval‑Augmented Generation (RAG)**.  Two Django apps map directly to the experimental chapters:
+This dissertation demonstrates how a domain‑specific **knowledge‑graph** can improve question‑answering performance when paired with **Retrieval‑Augmented Generation (RAG)** when knowledge is decomposed into propositions.  Two Django apps work together as a pincer by extracting the context from the PubMedQA dataset to see the knolwedge graph and thereafter using the questions in the PubMedQA dataset to determine how effectively that knowledge graph can be reasoned with. Chapter 3 Figure 3.2 below gives an overview of this system architecture.
 <p align="center">
   <img src="paper/system_architecture.png" alt="System architecture diagram" width="70%">
 </p>
-
-| Chapter | Django App | Purpose |
-|---------|------------|---------|
-| 3 | `knowledge-graph-generator` | Parse PubMed abstracts, extract biomedical triples, and populate a Neo4j graph. |
-| 4 | `graphRAG` | Expose graph‑aware retrieval endpoints consumed by the React frontend and evaluate QA metrics. |
 
 ---
 ## Repository Layout

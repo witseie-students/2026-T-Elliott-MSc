@@ -1,6 +1,16 @@
-# 2026-T-Elliott-MSc – Biomedical Knowledge-Graph & RAG Dissertation
+# 2026-T-Elliott-MSc-Dissertation – *Addressing Biomedical Literature Overload through Knowledge Graph Generation and Agentic Reasoning*
 
-Hosted on **GitHub**, this repository accompanies my engineering Master’s dissertation.  It contains a full-stack application that constructs a biomedical knowledge‑graph from PubMed literature and serves it through Retrieval‑Augmented Generation (RAG).
+## Authors
+**Student:** Taine J. Elliott
+**Supervisor:** Dr. Martin Bekker
+**Co-Supervisors:** Dr. Stephen Levitt, Dr. Ken Nixon
+
+
+## Abstract
+
+*Biomedical literature is growing at an unprecedented rate. As a result, researchers are likely to struggle keeping up with the growing volume. Current biomedical literature search tools retrieve large volumes of results, but lack the ability to deliver precise, context-aware answers. This work extends and contributes to research in information extraction for knowledge graph generation and knowledge graph retrieval augmented generation (graphRAG), with the goal of connecting all biomedical literature through units of knowledge. The work documents how a knowledge graph of propositions is built using 350 biomedical abstracts from the PubMedQA dataset. During construction, a back-translation methodology for validation was pioneered. Once constructed, questions derived from the dataset were answered using the knowledge graph with both single-iteration and recursive retrieval approaches. The system's performance was compared to a baseline (where the latter had access to the full context prior to graph generation). Through back-translation, the average cosine similarity between the reconstructed abstracts of propositions and the original abstracts was 0.913. The cosine similarity distribution was calibrated against the Semantic Textual Similarity Benchmark (STS-B), showing that reconstructed abstracts were completely equivalent to the original texts. Answers derived from the knowledge graph achieved 93.03\% of the baseline F1 score with single-iteration retrieval, and 86.07\% with recursive retrieval. This performance implies that knowledge graphs are capable of storing biomedical knowledge faithfully, and that they enable precise retrieval for effective reasoning. Ultimately, this dissertation demonstrates that biomedical literature can be captured in knowledge graph form, can effectively be reasoned with, signalling how researchers might better navigate vast quantities of biomedical knowledge.*
+
+📄 **Full dissertation PDF**: [paper/2026-T-Elliott-Dissertation.pdf](paper/Taine_Elliott_Msc_Dissertation.pdf)
 
 ---
 ## Table of Contents
@@ -175,12 +185,6 @@ pytest
 # Frontend unit tests
 npm test
 ```
-Continuous integration is configured via **GitHub Actions** in `.github/workflows/ci.yml`.
 
----
-## Contributing
-Pull requests are welcome while the dissertation is under active development.  Please branch from `dev`, run the full test suite, and follow the [Conventional Commits](https://www.conventionalcommits.org/) spec.
 
----
-## License
-This work is released under the MIT license (see `LICENSE`).  Datasets retain their original licenses.
+

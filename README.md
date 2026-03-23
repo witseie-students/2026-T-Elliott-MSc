@@ -53,7 +53,7 @@ This dissertation demonstrates how a **knowledgeâ€‘graph** can improve questionâ
 
 ---
 ## Quick Start
-You will initially need to install a NEO4J graph database which will run on port [insert port here] and update the .env variable to include the name and password of that graph database. The graph database will be used during post-processing in Chapter 1 and throughout Chapter 2.
+You will initially need to install a NEO4J graph database which will run on port bolt://localhost:7687 and update the .env variable to include the name and password of that graph database. The graph database will be used during post-processing in Chapter 1 and throughout Chapter 2.
 
 ```bash
 # 1. clone the repo
@@ -61,12 +61,9 @@ git clone https://github.com/witseie-students/2026-T-Elliott-MSc.git
 cd 2026-T-Elliott-MSc
 
 # 2. create the Conda environment (Python 3.11)
-conda env create -f environment.yml
-conda activate msc
+pip install -r requirements.txt
 
-# 3. copy & edit environment variables
-cp .env.example .env
-open -e .env   # edit secrets / keys
+# 3. Obtain an OpenAI api key and edit the .env variable inside of backend
 
 # 4. apply migrations & run the API
 cd backend
@@ -243,54 +240,7 @@ npm run build && npm run preview
 
 The app is pre-configured to proxy `/api/*` to `localhost:8000` in development.
 
----
-## Environment Variables (.env)
-Below is a minimal template; copy it to `.env` and fill in the blanks.
 
-```env
-# Django
-DJANGO_SECRET_KEY=CHANGEME
-DJANGO_DEBUG=True
-ALLOWED_HOSTS=127.0.0.1,localhost
-
-# Database
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=CHANGEME
-
-# OpenAI / HuggingFace
-OPENAI_API_KEY=
-HF_TOKEN=
-```
-
-
----
-## Conda Environment
-An exhaustive, reproducible spec is stored in **`environment.yml`**.  Excerpt:
-```yaml
-name: msc
-channels:
-  - conda-forge
-  - defaults
-dependencies:
-  - python=3.11
-  - django>=5,<6
-  - djangorestframework
-  - neo4j=5.*
-  - networkx
-  - spacy
-  - scispacy
-  - langchain
-  - openai
-  - nodejs  # required to build frontend
-  - pip
-  - pip:
-      - rdflib
-```
-Regenerate with:
-```bash
-conda env export --no-builds > environment.yml
-```
 
 
 

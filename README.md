@@ -22,11 +22,6 @@
    * [Chapter 4 — GraphRAG](#chapter-4--graphrag)
 5. [Frontend (set-up & usage)](#frontend)
 6. [Datasets](#datasets)
-7. [Environment Variables (.env)](#environment-variables-env)
-8. [Conda Environment](#conda-environment)
-9. [Testing](#testing)
-10. [Contributing](#contributing)
-11. [License](#license)
 
 ---
 ## Project Overview

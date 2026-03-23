@@ -18,10 +18,15 @@
 2. [Repository Layout](#repository-layout)
 3. [Quick Start](#quick-start)
 4. [Backend (set-up & usage)](#backend)
+   * [Chapter 3 — Knowledge Graph Generation](#chapter-3--knowledge-graph-generation)
+   * [Chapter 4 — GraphRAG](#chapter-4--graphrag)
 5. [Frontend (set-up & usage)](#frontend)
 6. [Datasets](#datasets)
 7. [Environment Variables (.env)](#environment-variables-env)
 8. [Conda Environment](#conda-environment)
+9. [Testing](#testing)
+10. [Contributing](#contributing)
+11. [License](#license)
 
 ---
 ## Project Overview
@@ -48,6 +53,8 @@ This dissertation demonstrates how a **knowledge‑graph** can improve question�
 
 ---
 ## Quick Start
+You will initially need to install a NEO4J graph database which will run on port [insert port here] and update the .env variable to include the name and password of that graph database. The graph database will be used during post-processing in Chapter 1 and throughout Chapter 2.
+
 ```bash
 # 1. clone the repo
 git clone https://github.com/witseie-students/2026-T-Elliott-MSc.git
@@ -66,10 +73,10 @@ cd backend
 python manage.py migrate
 python manage.py runserver 0.0.0.0:8000
 
-# 5. in a new terminal tab, start the React dev server
-cd ../frontend
-npm install
-npm run dev      # http://localhost:5173
+# 5. In a new terminal create the vector store
+python manage.py 000_initiate_chroma_vectors
+
+
 ```
 
 ---
@@ -80,28 +87,144 @@ npm run dev      # http://localhost:5173
 
 ---
 ## Backend
-### Key Dependencies
-* Django 5.x
-* Django REST Framework
-* Neo4j-Driver & Neomodel
-* SpaCy + ScispaCy models
-* NetworkX, RDFlib
-* LangChain / OpenAI SDK (for RAG evaluation)
+The following code snippets run in parallel with the dissertation while the django server is running in a different teriminal.
 
-### Running migrations & seed jobs
+### Chapter 3 — Knowledge Graph Generation
+The main orchestration for this pipeline is exposed through the API endpoint
+`process_paragraph_parallel/`, defined in
+`backend/knowledge_graph_generator/urls.py` and handled by
+`ProcessParagraphParallelView(APIView)` in
+`backend/knowledge_graph_generator/views.py`.
+
+#### 1. Running the entire pipeline to populate the database with the knolwedge graph for all 350 abstracts
 ```bash
-# inside backend/
-python manage.py migrate          # create tables
-python manage.py ingest_pubmed    # custom command – builds the graph
+# run full pipeline
+python manage.py 000_run_all_350_abstracts_and_save_to_database
 ```
 
-### API Endpoints (high-level)
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/v1/docs/<pmid>/triples/` | Extracted triples for a single PubMed article |
-| `POST` | `/api/v1/rag/query/` | RAG query with graph-aware retrieval |
+#### 2. Pre-processing
 
-Full OpenAPI docs are auto-generated at `/api/schema/`.
+The preprocessing strategy involves decomposing knolwedge into propositions and then applying coreference resolution upon the entire batch of propositions. The specific functions to do so can be found in `backend/knowledge_graph_generator/pipeline_utilities/propositions.py` and `backend/knowledge_graph_generator/pipeline_utilities/coreferences.py`
+
+
+#### 3. Information extraction
+
+The information extraction of triples and derived questions from those triples can be found in `backend/knowledge_graph_generator/pipeline_utilities/triple_extraction.py` and `backend/knowledge_graph_generator/pipeline_utilities/triple_question.py`.
+
+#### 4. Validation
+
+The validation strategy used involved back-translation which can be seen in the diagram below. Back-translation implicity evaluates the fidelity of information extraction.
+<p align="center">
+  <img src="paper/back_translation.png" alt="Back Translation" width="70%">
+</p>
+Initially, propositions are compared against triples to determine which unit representation has the highest fidelity. Thereafter, the triples extracted from the propositions are compared against the propositions themselves. Finally, the entire information loss is evaluated at each stage.
+
+##### 1. Propositions vs Triples
+The following two management commands should be run to extract the results and save them to the folder: `results/00_fully_organized_results/01_triple_vs_propositions`.
+```bash
+# Extract triples from each abstract
+python manage.py 000_compare_triples_to_propositions_at_abstract_level
+
+# Save the extracted propositions to the results folder
+python manage.py 000_export_combined_propositions_to_compare_with_triples_at_abstract_level
+```
+
+##### 2. Validation of Extracted triples
+The following management command extracts triples from the database which were extracted for each of the propositions and saves them to the folder: `results/00_fully_organized_results/02_grouped_triples_and_question_extraction_(not_combined)`.
+```bash
+# Extract triples from each proposition and save results to the directory
+python manage.py 000_triple_qa_results_per_proposition
+```
+The results can then be decoupled and evaluated when 1, 2 and 3+ propositions are extracted and back-translated individually compared to when they are back-translated together. This occurs in folder `results/00_fully_organized_results/02_grouped_triples_and_question_extraction_(not_combined)` and `results/00_fully_organized_results/03_grouped_triples_and_question_extraction_combined`.
+
+##### 3. Information Loss at each stage
+
+The following management command extracts the back-translated similarity at each stage of transformation starting with proposition chunking, then coreference resolution and finally extracted (and recombined) back-translated triples against the abstract from which they were derived. The results are then saved to the folder: `results/00_fully_organized_results/04_overall_system_results`.
+
+```bash
+# Extract and combine transformations at each stage to compare to the original abstract
+python manage.py 000_information_loss_at_each_stage
+```
+
+
+##### 4. Benchmark evaluation of results
+The creation of the benchmark to evaluate cosine similarity against the *STS-B* bins can be found in `results/00_fully_organized_results/00_benchmark`and the rest of the code regarding each of the validation tests can be found in the order it is represented in the dissertation in.
+
+
+
+#### 5. Post-processing
+During the extraction process the extracted triples and propositions are saved to a staging database which enables an audit trail in the case of errors being made. Inferring new relationships between locally extracted entities occurs in the file: `backend/knowledge_graph_generator/pipeline_utilities/triple_extraction.py`and  entity mapping occurs in the file: `backend/knowledge_graph_generator/chroma_db/entity_mapping.py` which works in tandem with the database to enable new and previously canonicalized entites.
+
+
+### Chapter 4 — GraphRAG
+
+This section uses the neo4j database of propositions connected by entities within them in conjunction with the questions and answers to those questions which is found in the 350 abstracts within the PubMedQA dataset to show different performance of different RAG architectures. Initially, a baseline is determined. Thereafter, different retrieval methodologies are explored. Finally, different reasoning methodologies are explored.
+
+#### 1. Creating a baseline
+
+The upperbound baseline and lowerbound baseline are created by running the following code. Where randomness represents the lowerbound baseline.
+
+```bash
+# Run upper-bound baseline
+python manage.py 000_upper_bound_baseline
+
+# run lower-bound baseline
+python manage.py 000_test_randomness
+```
+
+The results are saved to the folder `results/01_graphrag/02_upper_bound` whilst randomness generates an average performance.
+
+#### 2. Evaluating different retrieval architectures
+
+Initially ordinary RAG is tested using the following command
+```bash
+# Run ordinary RAG
+python manage.py 000_ordinary_rag
+```
+
+The results are saved to the folder: `results/01_graphrag/01_ordinary_rag`. Thereafter, dynamic graph traversal is explored using the following command:
+
+```bash
+# Run dynamic graphRAG
+python manage.py 000_dynamic_graphrag
+```
+The results are saved to the folder: `results/01_graphrag/03_ordinary_graphrag`. Finally, static graphRAG is performed with different depths.
+
+```bash
+# Run static graphRAG
+python manage.py 000_alg_graphrag
+```
+The results are saved to the folder: `results/01_graphrag/04_alg_graphrag`. 
+
+#### 3. Evaluating different reasoning architectures
+
+It became clear that algorithmic graphRAG had the strongest performance. Therefore, that is used as the chosen retrieval architecture. Using a ReAct style architecture, first Chain of Thoughts (CoT) is examined using the following command:
+```bash
+# Run CoT graphRAG
+python manage.py 000_cot_loop
+```
+The results are saved to the following folder `results/01_graphrag/05_cot_graphrag`. Thereafter, Tree of Thoughts is performed using the following command:
+```bash
+# Run ToT graphRAG
+python manage.py 000_tot_loop
+```
+The results are saved to the following folder `results/01_graphrag/06_tot_graphrag`. Thereafter, the null-hypotheis is explored and a baseline for the null-hypothesis is created. This is performed using the following command:
+```bash
+# Run null hypothesis baseline
+python manage.py 000_baseline_null_hypothesis
+
+# Run ToT null hypothesis graphRAG
+python manage.py 000_tot_null_hypothesis
+```
+the results are saved to the following folders `results/01_graphrag/09_baseline_null` and `results/01_graphrag/07_tot_null_hypothesis`. Finally, the null-hypothesis is run with a rumsfled matrix. This is performed using the following command: 
+```bash
+# Run ToT null hypothesis graphRAG with rumsfled matrix
+python manage.py 000_tot_rumsfled
+```
+The results are saved to the following folder: `results/01_graphrag/08_tot_rumsfeld`.
+
+
+
 
 ---
 ## Frontend
@@ -140,7 +263,6 @@ OPENAI_API_KEY=
 HF_TOKEN=
 ```
 
-> **Note:** If you prefer, you can also pin library versions here, e.g. `DJANGO_VERSION=5.0.2`, but the canonical list lives in `environment.yml`.
 
 ---
 ## Conda Environment

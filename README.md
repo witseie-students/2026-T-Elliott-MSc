@@ -37,12 +37,12 @@ This dissertation demonstrates how a **knowledge‑graph** can improve question�
     ├── backend/                  # Django project
     │   ├── knowledge-graph-generator/
     │   └── graphRAG/
+    │   └── .env                  # Conatins your OpenAI api key and django secret key    
     ├── frontend/                 # React (Vite) SPA
     ├── data/                     # Raw & processed datasets
     │   ├── pubmed_papers/
     │   └── pubmedqa/
-    ├── environment.yml           # Conda spec (see below)
-    ├── .env.example              # Template for secrets & config
+    ├── requirements.txt
     └── README.md                 # You are here
 ```
 

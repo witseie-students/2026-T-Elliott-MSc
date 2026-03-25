@@ -1,9 +1,60 @@
-/* src/tailwind.css */
+/* src/styles/tailwind.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom shadow class for left and bottom border */
+/* ─────────────────────────────────────────────
+   Frosted glass utility
+   Used on all info-blocks throughout the app.
+   backdrop-filter is enabled via Tailwind's
+   backdrop-blur-* classes; this layer adds the
+   shared border + tint so each block is consistent.
+───────────────────────────────────────────── */
+.glass-block {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ─────────────────────────────────────────────
+   Retro block accent line
+   Thick left border in white that gives the
+   "block-like" retro typographic feel.
+───────────────────────────────────────────── */
+.block-accent {
+  border-left: 4px solid rgba(255, 255, 255, 0.7);
+}
+
+/* ─────────────────────────────────────────────
+   Visible white scrollbar for glass blocks
+   Always shown when content overflows so the
+   user knows the section is scrollable.
+───────────────────────────────────────────── */
+.scrollbar-visible {
+  overflow-y: scroll; /* always reserve scrollbar space */
+}
+.scrollbar-visible::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-visible::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+.scrollbar-visible::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 3px;
+}
+.scrollbar-visible::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+
+/* ─────────────────────────────────────────────
+   Legacy shadow utility (kept for compatibility)
+───────────────────────────────────────────── */
 .shadow-left-bottom {
-    box-shadow: -2px 2px 10px rgba(0, 0, 0, 0.1), 2px 2px 10px rgba(0, 0, 0, 0.1);
-  }
+  box-shadow: -2px 2px 10px rgba(0, 0, 0, 0.1), 2px 2px 10px rgba(0, 0, 0, 0.1);
+}

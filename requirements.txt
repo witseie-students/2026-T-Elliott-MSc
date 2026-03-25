@@ -245,7 +245,7 @@ pymupdf4llm==0.0.10
 PyMuPDFb==1.24.9
 pyOpenSSL==25.0.0
 pyparsing==3.1.2
-pypdf==5.2.0
+pypdf==6.9.2
 pypdfium2==4.30.0
 PyPika==0.48.9
 pyppeteer==0.0.25

@@ -19,6 +19,7 @@ from knowledge_graph_generator.database_utilities.kg_utilities import (
     _driver,
     upsert_entity,
     save_quadruple_rel,
+    NEO4J_DB,
 )
 from knowledge_graph_generator.models import StagedQuadruple
 
@@ -37,7 +38,7 @@ def save_json_to_knowledge_graph(payload: Dict):
     # ---------- quick look-ups --------------------------------------
     alias_by_id = {a["id"]: a for a in entity_aliases}
 
-    with _driver().session(database="pubmedqa-context") as sess:
+    with _driver().session(database=NEO4J_DB) as sess:
         # relationships + node upserts
         for pg in quadruple_groups:
             for q in pg["quadruples"]:

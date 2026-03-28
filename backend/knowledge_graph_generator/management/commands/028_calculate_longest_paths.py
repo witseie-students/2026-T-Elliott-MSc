@@ -29,7 +29,7 @@ from django.core.management.base import BaseCommand
 from django.db.models import Prefetch
 from tabulate import tabulate                # pip install tabulate
 
-from knowledge_graph_generator.database_utilities.kg_utilities import _driver
+from knowledge_graph_generator.database_utilities.kg_utilities import _driver, NEO4J_DB
 from knowledge_graph_generator.models import (
     InferredQuadruple,
     Paragraph,
@@ -63,7 +63,7 @@ def _neo4j_edges_for_quad_ids(qids: list[str]) -> list[tuple[int, int, int]]:
         WHERE any(qid IN r.quad_ids WHERE qid IN $qids)
         RETURN id(r) AS rid, id(s) AS sid, id(o) AS oid
     """
-    with _driver().session(database="pubmedqa-context") as sess:
+    with _driver().session(database=NEO4J_DB) as sess:
         return [(rec["rid"], rec["sid"], rec["oid"]) for rec in sess.run(cypher, qids=qids)]
 
 

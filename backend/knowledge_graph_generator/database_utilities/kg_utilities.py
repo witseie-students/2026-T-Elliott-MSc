@@ -16,15 +16,16 @@
 from __future__ import annotations
 from typing import List, Optional
 
+from decouple import config
 from neo4j import GraphDatabase
 
 # ---------------------------------------------------------------------
-#  Connection constants
+#  Connection constants — read from backend/.env via python-decouple
 # ---------------------------------------------------------------------
-NEO4J_URI      = "bolt://localhost:7687"
-NEO4J_USER     = "neo4j"
-NEO4J_PASSWORD = "Turlangton35"
-NEO4J_DB       = "pubmedqa-context"
+NEO4J_URI      = config("NEO4J_URI",      default="bolt://localhost:7687")
+NEO4J_USER     = config("NEO4J_USER",     default="neo4j")
+NEO4J_PASSWORD = config("NEO4J_PASSWORD", default="")
+NEO4J_DB       = config("NEO4J_DB",       default="neo4j")
 
 
 # =====================================================================

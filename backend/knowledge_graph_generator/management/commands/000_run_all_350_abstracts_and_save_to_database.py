@@ -58,7 +58,7 @@ from knowledge_graph_generator.models import StagingParagraph
 DEFAULT_FILE  = (
     Path(settings.BASE_DIR).parent / "data/PUBMEDQA/pubmedqa_labelled_full.csv"
 )
-START_ROW     = 0     # ← hard-coded resume point (1-based index)
+START_ROW     = 1     # ← hard-coded resume point (1-based index)
 DEFAULT_LIMIT = 350    # ← how many rows to process from START_ROW
 
 

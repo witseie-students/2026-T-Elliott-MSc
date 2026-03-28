@@ -17,3 +17,13 @@ backend/.env
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Django
+backend/db.sqlite3
+
+# Vector / Chroma DB (binary runtime data)
+backend/knowledge_graph_vector_db/

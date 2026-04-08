@@ -243,7 +243,7 @@ pylance==0.22.0
 PyMuPDF==1.24.9
 pymupdf4llm==0.0.10
 PyMuPDFb==1.24.9
-pyOpenSSL==25.0.0
+pyOpenSSL==26.0.0
 pyparsing==3.1.2
 pypdf==5.2.0
 pypdfium2==4.30.0

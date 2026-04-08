@@ -321,7 +321,7 @@ torch==2.4.0
 tornado
 tqdm
 traitlets
-transformers==4.43.4
+transformers==5.0.0rc3
 Twisted==24.11.0
 txaio==23.1.1
 typer==0.9.4

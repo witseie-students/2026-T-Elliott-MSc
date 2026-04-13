@@ -256,7 +256,7 @@ PyRuSH==1.0.8
 pysbd==0.3.4
 pysimstring==1.2.1
 PySocks
-pytest==8.3.3
+pytest==9.0.3
 python-dateutil
 python-decouple==3.8
 python-dotenv==1.0.1

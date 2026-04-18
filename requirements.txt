@@ -182,7 +182,7 @@ mypy-extensions==1.0.0
 neo4j==5.26.0
 nest_asyncio
 networkx==3.3
-nltk==3.9.1
+nltk==3.9.4
 nodeenv==1.9.1
 numpy==1.26.4
 oauthlib==3.2.2
